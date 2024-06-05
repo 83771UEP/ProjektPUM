@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.tree import plot_tree
+
 # Standard libraries
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 
@@ -195,6 +197,7 @@ def plot_actual_vs_predicted(y_test: Any, y_pred: Any, ax: plt.Axes) -> None:
     ax.set_ylabel('Values')
     ax.legend(['Actual', 'Predicted'])
 
+
 #Funkcja generująca raport klasyfikacji
 def plot_classification_report(report: Dict[str, Any], ax: plt.Axes) -> None:
     report_df = pd.DataFrame(report).transpose().drop(columns='support')
@@ -220,6 +223,8 @@ def display_plots(y_fold_test: np.ndarray, y_pred: np.ndarray, report: Dict[str,
     plot_confusion_matrix(confusion_matrix(y_fold_test, y_pred, labels=classes), classes, axs[0, 1])
     plot_classification_report(report, axs[1, 0])
     plot_histogram(y_fold_test, y_pred, axs[2, 1])
+    accuracy = accuracy_score(y_fold_test, y_pred)
+    print(accuracy)
     
     axs[1, 1].plot(cv_results['test_score'], label='Test Score')
     axs[1, 1].plot(cv_results['train_score'], label='Train Score')
@@ -321,7 +326,7 @@ def random_forest_main():
 
         #generacja wizualizacji lasu losowego
         #Można odkomentować jeśli nie zależy na czasie (UWAGA: mi zawiesiło komputer)
-        plot_forest(rf)
+        data = pd.read_csv('wineDataFrame.csv', sep=";")
 
     except Exception as e:
         logging.error("An error occurred during model evaluation and plotting.", exc_info=True)
