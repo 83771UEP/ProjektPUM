@@ -61,7 +61,9 @@ def modify_data_initial(data):
         data[column] = pd.to_numeric(data[column], errors='coerce')
 
     # Drop rows with any NaN values
-    data.dropna(inplace=True)
+    data = data.dropna(inplace=True)
+
+    data = data.mask(data < 0).dropna()
 
     # Filter outliers
     for column in data.columns:
